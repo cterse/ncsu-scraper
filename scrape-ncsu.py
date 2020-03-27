@@ -2,6 +2,7 @@ from ncsu_course import Course, CourseSection
 from bs4 import BeautifulSoup
 from bs4 import Tag
 import requests
+import ncsu_scrape_methods as nsm
 
 url = "https://www.acs.ncsu.edu/php/coursecat/search.php"
 
@@ -22,5 +23,22 @@ html_doc = response.text.replace("\\", "")
 
 soup = BeautifulSoup(html_doc, "html.parser")
 
+course_list = []
+
 course_sections = soup.findAll("section", class_="course")
-print(len(course_sections))
+for section in course_sections:
+	course_id = nsm.get_ncsu_course_id(section)
+	if not course_id: continue
+
+	course = Course()
+	course.id = course_id
+	course.name = nsm.get_ncsu_course_name(section)
+	course.credits = nsm.get_ncsu_course_credits_tuple(section)
+
+	course_list.append(course)
+
+
+
+for course in course_list:
+	print("{0} : {1} = {2}".format(course.id, course.name, course.credits))
+print("-------- Total couses: {0}".format(len(course_list)))
