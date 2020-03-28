@@ -1,3 +1,4 @@
+import csv
 import json
 from ncsu_course import Course, CourseSection
 from bs4 import BeautifulSoup
@@ -39,8 +40,29 @@ for section in course_sections:
 	
 	course_list.append(course)
 
-op_file = open("./op.json", "w")
-for course in course_list:
-	op_file.write(str(course))
+# op_file = open("./op.json", "w")
+# for course in course_list:
+# 	op_file.write(str(course))
+
+with open("./ncsu_courses.csv", "w") as file:
+	writer = csv.writer(file)
+	writer.writerow(["Course ID", "Course Name", "Section", "Available Seats", "Total Seats", "Min credits", "Max credits"])
+
+	csv_course_list = []
+	for course in course_list:
+		for course_section in course.course_sections:
+			temp_list = []
+			temp_list.append(course.id)
+			temp_list.append(course.name)
+			temp_list.append(course_section.section)
+			temp_list.append(course_section.available_seats)
+			temp_list.append(course_section.total_seats)
+			temp_list.append(course.credits[0])
+			temp_list.append(course.credits[1])
+
+			csv_course_list.append(temp_list)
+	
+	writer.writerows(csv_course_list)
 
 print("-------- Total couses: {0}".format(len(course_list)))
+
