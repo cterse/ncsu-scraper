@@ -7,6 +7,12 @@ class Course():
         self.semsters = None
         self.course_sections = None
 
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return str(self.__dict__)
+
 class CourseSection():
     def __init__(self):
         self.section = None
@@ -19,3 +25,9 @@ class CourseSection():
         self.instructor = None
         self.begin_date = None
         self.end_date = None
+
+    def __str__(self):
+        return str(self.__dict__)
+
+    def __repr__(self):
+        return str(self.__dict__)
