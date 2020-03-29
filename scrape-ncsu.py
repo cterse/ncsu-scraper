@@ -44,9 +44,9 @@ for section in course_sections:
 # for course in course_list:
 # 	op_file.write(str(course))
 
-with open("./ncsu_courses.csv", "w") as file:
+with open("./ncsu_courses.csv", "w", newline="") as file:
 	writer = csv.writer(file)
-	writer.writerow(["Course ID", "Course Name", "Section", "Available Seats", "Total Seats", "Min credits", "Max credits"])
+	writer.writerow(["Course ID", "Course Name", "Section", "Available Seats", "Total Seats", "Status", "Instructor", "Min credits", "Max credits"])
 
 	csv_course_list = []
 	for course in course_list:
@@ -57,6 +57,8 @@ with open("./ncsu_courses.csv", "w") as file:
 			temp_list.append(course_section.section)
 			temp_list.append(course_section.available_seats)
 			temp_list.append(course_section.total_seats)
+			temp_list.append(course_section.section_status)
+			temp_list.append(course_section.instructor)
 			temp_list.append(course.credits[0])
 			temp_list.append(course.credits[1])
 
@@ -65,4 +67,3 @@ with open("./ncsu_courses.csv", "w") as file:
 	writer.writerows(csv_course_list)
 
 print("-------- Total couses: {0}".format(len(course_list)))
-

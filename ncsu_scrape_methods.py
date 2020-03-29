@@ -2,7 +2,7 @@ from ncsu_course import CourseSection
 from typing import Tuple
 from typing import List
 from bs4 import Tag
-
+from bs4 import NavigableString
 
 def get_course_id(section: Tag) -> str:
 	if not section: return None
@@ -51,10 +51,51 @@ def get_course_sections_list(section: Tag) -> List[CourseSection]:
 		course_section.instructor = row.contents[6].a.string.strip() if len(row.contents) > 6 and row.contents[6].a else row.contents[6].string.strip()
 		course_section.begin_date = row.contents[7].string.split("-")[0].strip() if len(row.contents) > 7 and row.contents[7].string else None
 		course_section.end_date = row.contents[7].string.split("-")[1].strip() if len(row.contents) > 7 and row.contents[7].string and len(row.contents[7].string.split("-")) > 1 else None
-		course_section.course_section_status = row.contents[3].span.string.strip() if len(row.contents) > 3 and row.contents[3].span and row.contents[3].span.string else None
+		course_section.section_status = row.contents[3].span.string.strip() if len(row.contents) > 3 and row.contents[3].span and row.contents[3].span.string else None
 		course_section.available_seats = row.contents[3].contents[2].string.split("/")[0].strip() if len(row.contents) > 3 and row.contents[3].contents and len(row.contents[3].contents) > 2 and row.contents[3].contents[2].string else None
-		course_section.total_seats = row.contents[3].contents[2].string.split("/")[1].strip() if len(row.contents) > 3 and row.contents[3].contents and len(row.contents[3].contents) >2 and row.contents[3].contents[2].string and len(row.contents[3].contents[2].string.split("/")) > 1 else None
+		if course_section.section_status and course_section.section_status.lower() == "waitlist":
+			course_section.total_seats = row.contents[3].contents[2].string.split("/")[1].strip().split(" ")[0] if len(row.contents) > 3 and row.contents[3].contents and len(row.contents[3].contents) >2 and row.contents[3].contents[2].string and len(row.contents[3].contents[2].string.split("/")) > 1 else None
+		else:
+			course_section.total_seats = row.contents[3].contents[2].string.split("/")[1].strip() if len(row.contents) > 3 and row.contents[3].contents and len(row.contents[3].contents) >2 and row.contents[3].contents[2].string and len(row.contents[3].contents[2].string.split("/")) > 1 else None
 
 		course_section_list.append(course_section)
 	
 	return course_section_list
+
+def get_section_component_column_index(table: Tag, section_component: str) -> int:
+	if not table or not section_component: return None
+
+	col_index = -1
+	col_header_row = table.thead.tr
+	for i in range(0, len(col_header_row.contents)):
+		if col_header_row.contents[i].string: 
+			if col_header_row.contents[i].string.lower() == section_component.lower():
+				col_index = i
+				break
+		else:
+			for child in col_header_row.contents[i].contents:
+				if isinstance(child, NavigableString):
+					if child.string.lower() == section_component.lower():
+						col_index = i
+						break
+	
+	return col_index if col_index > -1 else None
+
+def get_section_component_tag(table: Tag, section_component: str) -> Tag:
+	if not table or not section_component: return None
+
+	col_index = get_section_component_column_index(table, section_component)
+	if col_index is None: return None
+
+	sec_val_dict = {}
+	for child in table.children:
+		if child.name != "tr": continue
+		row = child
+		if not row.contents: continue
+
+		sec_id = row.contents[0].string.strip()
+		sec_value = row.contents[col_index]
+
+		sec_val_dict[sec_id] = sec_value
+	
+	return sec_val_dict

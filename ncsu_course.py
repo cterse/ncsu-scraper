@@ -5,7 +5,7 @@ class Course():
         self.credits = None
         self.description = None
         self.semsters = None
-        self.course_sections = None
+        self.course_sections: CourseSection = None
 
     def __str__(self):
         return str(self.__dict__)
@@ -20,7 +20,7 @@ class CourseSection():
         self.class_number = None
         self.total_seats = None
         self.available_seats = None
-        self.course_section_status = None
+        self.section_status = None
         self.location = None
         self.instructor = None
         self.begin_date = None
