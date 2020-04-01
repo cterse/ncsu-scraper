@@ -40,11 +40,11 @@ for section in course_sections:
 	
 	course_list.append(course)
 
-# op_file = open("./op.json", "w")
-# for course in course_list:
-# 	op_file.write(str(course))
+op_file = open("./output/ncsu_courses.json", "w")
+for course in course_list:
+	op_file.write(str(course))
 
-with open("./ncsu_courses.csv", "w", newline="") as file:
+with open("./output/ncsu_courses.csv", "w", newline="") as file:
 	writer = csv.writer(file)
 	writer.writerow(["Course ID", "Course Name", "Section", "Available Seats", "Total Seats", "Status", "Instructor", "Min credits", "Max credits"])
 
