@@ -1,3 +1,5 @@
+import constants
+import os
 import csv
 import json
 from ncsu_course import Course, CourseSection
@@ -39,6 +41,14 @@ for section in course_sections:
 	course.course_sections = nsm.get_course_sections_list(section)
 	
 	course_list.append(course)
+
+op_dir = os.path.join(constants.OUTPUT_FOLDER_PATH, constants.OUTPUT_FOLDER_NAME)
+try:
+	os.mkdir(op_dir)
+	print("Output directory created.")
+except FileExistsError:
+	print("Output directory already present.")
+	pass
 
 op_file = open("./output/ncsu_courses.json", "w")
 for course in course_list:
