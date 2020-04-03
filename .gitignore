@@ -1,3 +1,5 @@
 /__pycache__
 test_bs.py
 /output
+/.mypy_cache
+/.vscode

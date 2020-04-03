@@ -1,3 +1,3 @@
-# Output files
-OUTPUT_FOLDER_NAME = "output"
-OUTPUT_FOLDER_PATH = "./"
+import os
+
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
