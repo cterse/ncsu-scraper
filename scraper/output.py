@@ -6,7 +6,7 @@ import csv
 import os
 import sys
 import pathlib
-from typing import Any, List
+from typing import Any, List, Optional
 
 from ncsu_course import NCSUCourse
 sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
@@ -16,26 +16,26 @@ import constants
 OUTPUT_FOLDER_NAME = "output"
 OUTPUT_FILE_NAME = "ncsu_courses"
 
-def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> int: 
+def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> Optional[str]: 
     op_folder_path = os.path.join(constants.ROOT_DIR, dir_name)
     try:
         os.mkdir(op_folder_path)
         print("Output directory created.")
-        return 0
+        return op_folder_path
     except FileExistsError:
         print("Output directory already present.")
-        return 0
+        return op_folder_path
     except:
         print("Error creating output directory.")
-        return 1
+        return None
 
 def export_to_json(courses: List[NCSUCourse]) -> int:
 	if not courses: return -1
 
-	create_output_directory(OUTPUT_FOLDER_NAME)
+	op_folder_path = create_output_directory(OUTPUT_FOLDER_NAME)
 
 	try:
-		output_file = os.path.join(OUTPUT_FOLDER_PATH, OUTPUT_FILE_NAME+".json")
+		output_file = os.path.join(op_folder_path, OUTPUT_FILE_NAME+".json")
 		op_file = open(output_file, "w")
 		for course in courses:
 			op_file.write(str(course))
@@ -47,10 +47,10 @@ def export_to_json(courses: List[NCSUCourse]) -> int:
 def export_to_csv(courses: List[NCSUCourse]) -> int:
 	if not courses: return -1
 
-	create_output_directory(OUTPUT_FOLDER_NAME)
+	op_folder_path = create_output_directory(OUTPUT_FOLDER_NAME)
 
 	try:
-		output_file = os.path.join(OUTPUT_FOLDER_PATH, OUTPUT_FILE_NAME+".csv")
+		output_file = os.path.join(op_folder_path, OUTPUT_FILE_NAME+".csv")
 		with open(output_file, "w", newline="") as file:
 			writer = csv.writer(file)
 			writer.writerow(["Course ID", "Course Name", "Course Status", "Section", "Available Seats", "Total Seats", "Section Status", "Instructor", "Min credits", "Max credits"])
@@ -75,5 +75,6 @@ def export_to_csv(courses: List[NCSUCourse]) -> int:
 
 			writer.writerows(csv_course_list)
 			return 0
-	except:
+	except Exception as e:
+		print(e)
 		return -1
