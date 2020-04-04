@@ -1,6 +1,4 @@
-from typing import List
-from typing import Tuple
-from typing import Optional
+from typing import List, Optional, Tuple
 
 # NCSU Course Constants
 NCSU_COURSE_STATUS_OPEN = "OPEN"

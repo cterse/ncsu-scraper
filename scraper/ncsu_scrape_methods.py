@@ -1,11 +1,9 @@
-from ncsu_course import NCSUCourse
-from ncsu_course import NCSUCourseSection
-from typing import Tuple
-from typing import List
-from typing import Optional
-from bs4 import Tag
-from bs4 import NavigableString
-from bs4 import BeautifulSoup
+from typing import List, Optional, Tuple
+
+from bs4 import BeautifulSoup, NavigableString, Tag
+
+from ncsu_course import NCSUCourse, NCSUCourseSection
+
 
 def get_courses_list(soup: BeautifulSoup) -> List[NCSUCourse]:
 	if not soup: return []

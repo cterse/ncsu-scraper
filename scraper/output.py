@@ -1,20 +1,25 @@
-from typing import Any
-from typing import Optional
+'''
+Data output utils.
+'''
+
 import csv
-from ncsu_course import NCSUCourse
-from typing import List
 import os
+import sys
+import pathlib
+from typing import Any, List
+
+from ncsu_course import NCSUCourse
+sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
 import constants
 
 # Output constants
 OUTPUT_FOLDER_NAME = "output"
-OUTPUT_FOLDER_PATH = os.path.join(constants.ROOT_DIR, OUTPUT_FOLDER_NAME)
 OUTPUT_FILE_NAME = "ncsu_courses"
 
 def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> int: 
-    
+    op_folder_path = os.path.join(constants.ROOT_DIR, dir_name)
     try:
-        os.mkdir(OUTPUT_FOLDER_PATH)
+        os.mkdir(op_folder_path)
         print("Output directory created.")
         return 0
     except FileExistsError:
@@ -36,7 +41,7 @@ def export_to_json(courses: List[NCSUCourse]) -> int:
 			op_file.write(str(course))
 	except:
 		return -1
-	
+
 	return 0
 
 def export_to_csv(courses: List[NCSUCourse]) -> int:
