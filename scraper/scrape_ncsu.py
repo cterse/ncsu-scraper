@@ -1,14 +1,18 @@
 import requests
+import pathlib
+import sys
 
 from bs4 import BeautifulSoup
 import ncsu_scrape_methods as nsm
+sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
+import constants
 
 def scrape_courses():
 
 	# Scrape data from website
 	URL = "https://www.acs.ncsu.edu/php/coursecat/search.php"
 
-	payload = 'course-career=GRAD&course-inequality=%3D&course-number=&current_strm=2208&distance-only=0&end-time=&end-time-inequality=%3C%3D&instructor-name=&session=&start-time=&start-time-inequality=%3C%3D&subject=CSC%20-%20Computer%20Science&term=2208'
+	payload = 'course-career=GRAD&course-inequality=%3D&course-number=&current_strm='+ constants.YEAR_CODE_2020 + '' + constants.SEM_CODE_FALL +'&distance-only=0&end-time=&end-time-inequality=%3C%3D&instructor-name=&session=&start-time=&start-time-inequality=%3C%3D&subject=CSC%20-%20Computer%20Science&term=2208'
 	headers = {
 		'Origin': 'https://www.acs.ncsu.edu',
 		'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36 OPR/67.0.3575.97',
@@ -19,6 +23,8 @@ def scrape_courses():
 		'DNT': '1',
 		'Content-Type': 'application/x-www-form-urlencoded'
 	}
+	constants.QUERIED_SEMESTER = constants.SEM_CODE_FALL
+	constants.QUERIED_YEAR = constants.YEAR_CODE_2020
 
 	response = requests.request("POST", URL, headers=headers, data = payload)
 

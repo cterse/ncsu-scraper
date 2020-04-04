@@ -9,12 +9,12 @@ import pathlib
 from typing import Any, List, Optional
 
 from ncsu_course import NCSUCourse
-sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
+# sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
 import constants
 
 # Output constants
 OUTPUT_FOLDER_NAME = "output"
-OUTPUT_FILE_NAME = "ncsu_courses"
+OUTPUT_FILE_NAME_PREFIX = "ncsu_courses"
 
 def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> Optional[str]: 
     op_folder_path = os.path.join(constants.ROOT_DIR, dir_name)
@@ -29,13 +29,18 @@ def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> Optional[str]
         print("Error creating output directory.")
         return None
 
+def get_output_filename(filetype: str) -> Optional[str]:
+	if not filetype: return None
+
+	return OUTPUT_FILE_NAME_PREFIX + "_" + constants.QUERIED_YEAR + "" + constants.QUERIED_SEMESTER + "." + filetype
+
 def export_to_json(courses: List[NCSUCourse]) -> int:
 	if not courses: return -1
 
 	op_folder_path = create_output_directory(OUTPUT_FOLDER_NAME)
 
 	try:
-		output_file = os.path.join(op_folder_path, OUTPUT_FILE_NAME+".json")
+		output_file = os.path.join(op_folder_path, get_output_filename("json"))
 		op_file = open(output_file, "w")
 		for course in courses:
 			op_file.write(str(course))
@@ -50,7 +55,7 @@ def export_to_csv(courses: List[NCSUCourse]) -> int:
 	op_folder_path = create_output_directory(OUTPUT_FOLDER_NAME)
 
 	try:
-		output_file = os.path.join(op_folder_path, OUTPUT_FILE_NAME+".csv")
+		output_file = os.path.join(op_folder_path, get_output_filename("csv"))
 		with open(output_file, "w", newline="") as file:
 			writer = csv.writer(file)
 			writer.writerow(["Course ID", "Course Name", "Course Status", "Section", "Available Seats", "Total Seats", "Section Status", "Instructor", "Min credits", "Max credits"])
