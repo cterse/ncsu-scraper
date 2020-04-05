@@ -15,6 +15,7 @@ class NCSUCourse():
         self.semsters: List[str] = None
         self.course_sections: List[NCSUCourseSection] = None
         self.course_status: str = None
+        self.course_prereq: str = None
 
     def get_course_status(self) -> Optional[str]:
         if not self.course_sections: return None

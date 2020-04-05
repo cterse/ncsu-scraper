@@ -19,6 +19,7 @@ def get_courses_list(soup: BeautifulSoup) -> List[NCSUCourse]:
 		course.name = get_course_name(section)
 		course.credits = get_course_credits_tuple(section)
 		course.course_sections = get_course_sections_list(section)
+		course.course_prereq = get_course_prereqs(section)
 		
 		course_list.append(course)
 	
@@ -28,6 +29,15 @@ def get_course_id(section: Tag) -> Optional[str]:
 	if not section: return None
 	if not section.h1 or not section.h1.contents: return None
 	return section.h1.contents[0].strip()
+
+def get_course_prereqs(section: Tag) -> Optional[str]:
+	if not section: return None
+
+	def get_prereq_para_tag(tag) -> bool:
+		return tag and tag.name == "p" and tag.string and tag.string.startswith("Prerequisite:")
+	prereq_para_tag = section.find(get_prereq_para_tag)
+
+	return prereq_para_tag.string.split(":")[1].strip() if prereq_para_tag and ":" in prereq_para_tag.string else None
 
 def get_course_name(section: Tag) -> Optional[str]:
 	if not section: return None

@@ -58,7 +58,7 @@ def export_to_csv(courses: List[NCSUCourse]) -> int:
 		output_file = os.path.join(op_folder_path, get_output_filename("csv"))
 		with open(output_file, "w", newline="") as file:
 			writer = csv.writer(file)
-			writer.writerow(["Course ID", "Course Name", "Course Status", "Section", "Available Seats", "Total Seats", "Section Status", "Instructor", "Min credits", "Max credits"])
+			writer.writerow(["Course ID", "Course Name", "Course Status", "Course Prerequisites", "Section", "Available Seats", "Total Seats", "Section Status", "Instructor", "Min credits", "Max credits"])
 
 			csv_course_list: List[List[Any]] = []
 			for course in courses:
@@ -68,6 +68,7 @@ def export_to_csv(courses: List[NCSUCourse]) -> int:
 					temp_list.append(course.id)
 					temp_list.append(course.name)
 					temp_list.append(course.get_course_status())
+					temp_list.append(course.course_prereq)
 					temp_list.append(course_section.section)
 					temp_list.append(course_section.available_seats)
 					temp_list.append(course_section.total_seats)
