@@ -1,5 +1,29 @@
 import os
 
+# Logging dict config
+LOGGING_CONFIG = {
+    'version': 1,
+    'formatters': {
+        'default_f': {
+            'format':'%(asctime)s - %(levelname)s - %(module)s:%(funcName)s - %(message)s'
+        }
+    },
+    'handlers': {
+        'default_h': {
+            'class': 'logging.StreamHandler',
+            'level': 'INFO',
+            'formatter': 'default_f',
+            'stream': 'ext://sys.stdout'
+        }
+    },
+    'loggers': {
+        'default_logger': {
+            'level': 'INFO',
+            'handlers': ['default_h']
+        }
+    }
+}
+
 # Output constants
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 

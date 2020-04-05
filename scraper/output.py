@@ -7,10 +7,13 @@ import os
 import sys
 import pathlib
 from typing import Any, List, Optional
+import logging
 
 from ncsu_course import NCSUCourse
 # sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
 import constants
+
+log = logging.getLogger("default_logger")
 
 # Output constants
 OUTPUT_FOLDER_NAME = "output"
@@ -20,13 +23,13 @@ def create_output_directory(dir_name: str = OUTPUT_FOLDER_NAME) -> Optional[str]
     op_folder_path = os.path.join(constants.ROOT_DIR, dir_name)
     try:
         os.mkdir(op_folder_path)
-        print("Output directory created.")
+        log.info("Output directory created.")
         return op_folder_path
     except FileExistsError:
-        print("Output directory already present.")
+        log.info("Output directory already present.")
         return op_folder_path
     except:
-        print("Error creating output directory.")
+        log.info("Error creating output directory.")
         return None
 
 def get_output_filename(filetype: str) -> Optional[str]:
@@ -82,5 +85,5 @@ def export_to_csv(courses: List[NCSUCourse]) -> int:
 			writer.writerows(csv_course_list)
 			return 0
 	except Exception as e:
-		print(e)
+		log.error(e)
 		return -1

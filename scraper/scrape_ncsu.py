@@ -1,11 +1,16 @@
 import requests
 import pathlib
 import sys
+import logging.config
 
 from bs4 import BeautifulSoup
 import ncsu_scrape_methods as nsm
 sys.path.append(pathlib.Path(__file__).parent.parent.resolve().as_posix())
 import constants
+
+logging.config.dictConfig(constants.LOGGING_CONFIG)
+
+log = logging.getLogger("default_logger")
 
 def scrape_courses():
 
@@ -26,18 +31,23 @@ def scrape_courses():
 	constants.QUERIED_SEMESTER = constants.SEM_CODE_FALL
 	constants.QUERIED_YEAR = constants.YEAR_CODE_2020
 
+	log.info("Sending request to URL: " + URL)
 	response = requests.request("POST", URL, headers=headers, data = payload)
+	log.info("Response received.")
 
 	# Parse the scraped data and get list of courses
 	html_doc = response.text.replace("\\", "")
 	soup = BeautifulSoup(html_doc, "html.parser")
 	course_list = nsm.get_courses_list(soup)
+	log.info("Course list population complete.")
 
 	# Ouput the results
+	log.info("Starting output.")
 	import output
 	output.export_to_json(course_list)
 	output.export_to_csv(course_list)
+	log.info("Output finished.")
 
-	print("-------- Total couses: {0}".format(len(course_list)))
+	log.info("-------- Total couses: {0}".format(len(course_list)))
 
 scrape_courses()
